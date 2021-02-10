@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 
 export const Role = mongoose.model("Role", new mongoose.Schema( // role
     {
+        legacy_id: { // role_id
+            type: Number,
+            required: false,
+        },
         name: { // name
             type: String,
             required: true,
-        },
-        legacy_id: { // role_id
-            type: Number,
-            required: true,
+            unique: true
         },
     },
     { timestamps: true }
@@ -16,6 +17,10 @@ export const Role = mongoose.model("Role", new mongoose.Schema( // role
 
 export const User = mongoose.model("User", new mongoose.Schema( // person
     {
+        legacy_id: { // person_id
+            type: Number,
+            required: false,
+        },
         firstName: { // name
             type: String,
             required: true,
@@ -35,6 +40,9 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
             min: 6,
             max: 255,
         },
+        ssn: { // ssn
+            type: String,
+        },
         dateOfBirth: { // -
             type: Date,
             default: Date.now,
@@ -52,11 +60,7 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
             max: 1024,
         },
         role: { // role_id
-            type: Number,
-            required: true,
-        },
-        legacy_id: { // person_id
-            type: Number,
+            type: mongoose.ObjectId,
             required: true,
         },
     },

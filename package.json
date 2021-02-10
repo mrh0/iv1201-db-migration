@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node ./"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/mrh0/iv1201-db-migration#readme",
   "dependencies": {
+    "@types/mysql": "^2.15.17",
     "dotenv": "^8.2.0",
     "mongoose": "^5.11.15",
+    "mysql": "^2.18.1",
     "typescript": "^4.1.3"
   }
 }
