@@ -1,15 +1,15 @@
 import { MongoDB, SQLDB } from "./src/db";
 import { migrate, init } from "./src/migrator";
-import { Role, User } from "./src/model/tables";
+import { Role, User, Availability, Competence, Profile } from "./src/model/tables";
 
-function stringRange(str: any, min: number, max: number): string | null {
-    if(!(str instanceof String))
+function stringRange(str: string, min: number, max: number): string | null {
+    if(str == null)
         return null;
     if(str.length < min)
         return null;
     if(str.length > max)
         return null;
-    return str as string;
+    return str;
 }
 
 function generateUnique(length: number): string {
@@ -29,9 +29,8 @@ function generatePassword(email: string, length: number) {
 
 async function main() {
     await MongoDB();
-    const sql = await SQLDB();
+    init(await SQLDB());
 
-    init(sql);
     await migrate(Role, "role", {
         "role_id": "legacy_id"
     });
@@ -44,10 +43,27 @@ async function main() {
     }, {
         "role": {schema: Role, key: "legacy_id"}
     }, {
-        "email": (value, row) => stringRange(value, 6, 255) || ("no-email@" + generateUnique(20)),
-        "password": (value, row) => value || generatePassword(row['email'], 20),
-        "username": (value, row) => value || (row['firstName'] + row['lastName']),
+        "email": (value, row) => stringRange(value, 6, 255) || ((row['firstName'] + row['lastName']) as string).toLowerCase(),//("no-email@" + generateUnique(20)),
+        "password": (value, row) => stringRange(value, 6, 1024) || generatePassword(row['email'], 20),
+        "username": (value, row) => value || ((row['firstName'] + row['lastName']) as string).toLowerCase(),
         "ssn": (value, row) => value || ""
+    });
+
+    await migrate(Availability, "availability", {
+        "availability_id": "legacy_id"
+    }, {
+        "person_id": {schema: User, key: "legacy_id"}
+    });
+
+    await migrate(Competence, "competence", {
+        "competence_id": "legacy_id"
+    });
+
+    await migrate(Profile, "competence_profile", {
+        "competence_profile_id": "legacy_id"
+    }, {
+        "person_id": {schema: User, key: "legacy_id"},
+        "competence_id": {schema: Competence, key: "legacy_id"}
     });
 }
 

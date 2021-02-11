@@ -34,7 +34,9 @@ export async function migrate(schema: mongoose.Model<mongoose.Document<any>>, ta
             entry[key] = value;
         }
         for(let key in defs) {
-            entry[key] = defs[key](entry[key], row);
+            //console.log("DEF: ", key, entry[key]);
+            entry[key] = defs[key](entry[key], entry);
+            //console.log("NEW:", entry[key], entry);
         }
         entries.push(entry);
     }

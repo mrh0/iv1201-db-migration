@@ -10,7 +10,7 @@ export const Role = mongoose.model("Role", new mongoose.Schema( // role
             type: String,
             required: true,
             unique: true
-        },
+        }
     },
     { timestamps: true }
 ));
@@ -24,13 +24,13 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
         firstName: { // name
             type: String,
             required: true,
-            min: 3,
+            min: 2,
             max: 50,
         },
         lastName: { // surname
             type: String,
             required: true,
-            min: 3,
+            min: 2,
             max: 50,
         },
         email: { // email
@@ -61,6 +61,65 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
         },
         role: { // role_id
             type: mongoose.ObjectId,
+            required: true,
+        }
+    },
+    { timestamps: true }
+));
+
+export const Availability = mongoose.model("Availability", new mongoose.Schema( // availability
+    {
+        legacy_id: { // availability_id
+            type: Number,
+            required: false,
+        },
+        person_id: { // person_id
+            type: mongoose.ObjectId,
+            required: true,
+        },
+        from_date: { // from_date
+            type: Date,
+            default: Date.now,
+        },
+        to_date: { // to_date
+            type: Date,
+            default: Date.now,
+        }
+    },
+    { timestamps: true }
+));
+
+export const Competence = mongoose.model("Competence", new mongoose.Schema( // competence
+    {
+        legacy_id: { // competence_id
+            type: Number,
+            required: false,
+        },
+        name: { // name
+            type: String,
+            required: true,
+            unique: true
+        }
+    },
+    { timestamps: true }
+));
+
+export const Profile = mongoose.model("Profile", new mongoose.Schema( // competence_profile
+    {
+        legacy_id: { // competence_profile_id
+            type: Number,
+            required: false,
+        },
+        person_id: { // person_id
+            type: mongoose.ObjectId,
+            required: true,
+        },
+        competence_id: { // competence_id
+            type: mongoose.ObjectId,
+            required: true,
+        },
+        years_of_experience: { // years_of_experience
+            type: Number,
             required: true,
         },
     },
