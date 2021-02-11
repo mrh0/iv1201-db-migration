@@ -21,9 +21,10 @@ function generateUnique(length: number): string {
     return result;
 }
 
-function generatePassword(email: string, length: number) {
+function generatePassword(row: object, length: number) {
     let result = generateUnique(length);
-    console.log(email, "=>", result);
+    console.log("Resetting password for: ", row['email']);
+    row['reset_password'] = true;
     return result;
 }
 
@@ -44,7 +45,7 @@ async function main() {
         "role": {schema: Role, key: "legacy_id"}
     }, {
         "email": (value, row) => stringRange(value, 6, 255) || ("no-email@" + ((row['firstName'] + row['lastName']) as string).toLowerCase()),
-        "password": (value, row) => stringRange(value, 6, 1024) || generatePassword(row['email'], 20),
+        "password": (value, row) => stringRange(value, 6, 1024) || generatePassword(row, 20),
         "username": (value, row) => value || ((row['firstName'] + row['lastName']) as string).toLowerCase(),
         "ssn": (value, row) => value || ""
     });

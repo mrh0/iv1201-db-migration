@@ -66,6 +66,7 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
         reset_password: { // -
             type: Boolean,
             required: true,
+            default: false
         }
     },
     { timestamps: true }
