@@ -43,7 +43,7 @@ async function main() {
     }, {
         "role": {schema: Role, key: "legacy_id"}
     }, {
-        "email": (value, row) => stringRange(value, 6, 255) || ((row['firstName'] + row['lastName']) as string).toLowerCase(),//("no-email@" + generateUnique(20)),
+        "email": (value, row) => stringRange(value, 6, 255) || ("no-email@" + ((row['firstName'] + row['lastName']) as string).toLowerCase()),
         "password": (value, row) => stringRange(value, 6, 1024) || generatePassword(row['email'], 20),
         "username": (value, row) => value || ((row['firstName'] + row['lastName']) as string).toLowerCase(),
         "ssn": (value, row) => value || ""

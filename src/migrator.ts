@@ -16,7 +16,6 @@ export async function migrate(schema: mongoose.Model<mongoose.Document<any>>, ta
     refs = refs || {};
     defs = defs || {};
     let result = await query('SELECT * FROM ' + table);
-    //console.log(result);
     let entries = [];
     for(let row of result) {
         let entry = {};
@@ -30,17 +29,12 @@ export async function migrate(schema: mongoose.Model<mongoose.Document<any>>, ta
                 find[r.key] = value;
                 value = await r.schema.findOne({...find}, '_id').exec();
             }
-
             entry[key] = value;
         }
-        for(let key in defs) {
-            //console.log("DEF: ", key, entry[key]);
+        for(let key in defs) 
             entry[key] = defs[key](entry[key], entry);
-            //console.log("NEW:", entry[key], entry);
-        }
         entries.push(entry);
     }
-    //console.log(entries);
     for(let entry of entries) {
         try {
             await new schema({...entry}).save();
@@ -49,4 +43,6 @@ export async function migrate(schema: mongoose.Model<mongoose.Document<any>>, ta
             console.error("Error in row: ", entry, e);
         }
     }
+
+    console.log("Finished migration of '" + table + "'.");
 }

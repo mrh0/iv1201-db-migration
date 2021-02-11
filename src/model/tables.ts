@@ -62,6 +62,10 @@ export const User = mongoose.model("User", new mongoose.Schema( // person
         role: { // role_id
             type: mongoose.ObjectId,
             required: true,
+        },
+        reset_password: { // -
+            type: Boolean,
+            required: true,
         }
     },
     { timestamps: true }
